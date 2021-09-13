@@ -1,0 +1,9 @@
+(menhir
+  (modules parser))
+
+(ocamllex lexer)
+
+(executable
+ (name asm2c)
+ (preprocess (pps ppx_deriving.show))
+ )
