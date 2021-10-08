@@ -40,19 +40,18 @@ open Asmast
 %token DIR_SECTION
 %token DIR_SIZE
 %token DIR_TEXT
+%token DIR_DATA
 %token DIR_TYPE
 %token DIR_WORD
 %token DIR_XWORD
 
-
 %token INST_ADD
-%token INST_AND
-%token INST_ANDS
 %token INST_ADDS
 %token INST_ADR
 %token INST_ADRP
+%token INST_AND
+%token INST_ANDS
 %token INST_B
-%token INST_BL
 %token INST_B_EQ
 %token INST_B_NE
 %token INST_B_GT
@@ -60,34 +59,62 @@ open Asmast
 %token INST_B_LT
 %token INST_B_LE
 %token INST_B_HI
-%token INST_CBZ
+%token INST_BFI
+%token INST_BIC
+%token INST_BL
+%token INST_BLR
+%token INST_BR
 %token INST_CBNZ
+%token INST_CBZ
+%token INST_CINC
 %token INST_CLRPERM
 %token INST_CLRTAG
+%token INST_CNEG
+%token INST_CSEL
 %token INST_CSET
 %token INST_CSINC
+%token INST_EOR
+%token INST_FADD
+%token INST_FCVT
+%token INST_FDIV
+%token INST_FMOV
+%token INST_FMUL
+%token INST_FSUB
+%token INST_GCVALUE
 %token INST_LDP
 %token INST_LDR
-%token INST_LDRSW
 %token INST_LDRB
+%token INST_LDRH
+%token INST_LDRSW
 %token INST_LDUR
 %token INST_LDURSW
 %token INST_MOV
-%token INST_MUL
+%token INST_MOVI
+%token INST_MOVK
 %token INST_MRS
+%token INST_MUL
+%token INST_MVN
+%token INST_ORN
+%token INST_ORR
 %token INST_RET
+%token INST_SBFIZ
 %token INST_SCBNDS
 %token INST_SCBNDSE
+%token INST_SCVTF
+%token INST_SDIV
+%token INST_SEAL
 %token INST_SMADDL
 %token INST_STP
 %token INST_STR
 %token INST_STRB
 %token INST_STRH
+%token INST_STUR
 %token INST_SUB
 %token INST_SUBS
-%token INST_STUR
-%token INST_TBZ
 %token INST_TBNZ
+%token INST_TBZ
+%token INST_UBFX
+%token INST_UDIV
 
 %token LSL
 %token LSR
@@ -249,6 +276,10 @@ directive:
     {
       OtherDir "TEXT"
     }
+  | DIR_DATA
+    {
+      OtherDir "DATA"
+    }
   | DIR_TYPE IDENT COMMA SECTION
     {
       OtherDir "TYPE"
@@ -291,13 +322,13 @@ arg:
 
 instruction:
  | INST_ADD separated_list(COMMA,arg) { OtherInstr "ADD" }
- | INST_AND separated_list(COMMA,arg) { OtherInstr "AND" }
- | INST_ANDS separated_list(COMMA,arg) { OtherInstr "ANDS" }
- | INST_ADDS separated_list(COMMA,arg) { OtherInstr "ADDS"}
+ | INST_ADDS separated_list(COMMA,arg) { OtherInstr "ADDS" }
  | INST_ADR separated_list(COMMA,arg) { OtherInstr "ADR" }
  | INST_ADRP separated_list(COMMA,arg) { OtherInstr "ADRP" }
+ | INST_AND separated_list(COMMA,arg) { OtherInstr "AND" }
+ | INST_ANDS separated_list(COMMA,arg) { OtherInstr "ANDS" }
+ | ASR separated_list(COMMA,arg) { OtherInstr "ASR" }
  | INST_B separated_list(COMMA,arg) { OtherInstr "B" }
- | INST_BL separated_list(COMMA,arg) { OtherInstr "BL" }
  | INST_B_EQ separated_list(COMMA,arg) { OtherInstr "B.EQ" }
  | INST_B_NE separated_list(COMMA,arg) { OtherInstr "B.NE" }
  | INST_B_GT separated_list(COMMA,arg) { OtherInstr "B.GT" }
@@ -305,36 +336,65 @@ instruction:
  | INST_B_LT separated_list(COMMA,arg) { OtherInstr "B.LT" }
  | INST_B_LE separated_list(COMMA,arg) { OtherInstr "B.LE" }
  | INST_B_HI separated_list(COMMA,arg) { OtherInstr "B.HI" }
- | INST_CBZ separated_list(COMMA,arg) { OtherInstr "CBZ" }
+ | INST_BFI separated_list(COMMA,arg) { OtherInstr "BFI" }
+ | INST_BIC separated_list(COMMA,arg) { OtherInstr "BIC" }
+ | INST_BL separated_list(COMMA,arg) { OtherInstr "BL" }
+ | INST_BLR separated_list(COMMA,arg) { OtherInstr "BLR" }
+ | INST_BR separated_list(COMMA,arg) { OtherInstr "BR" }
  | INST_CBNZ separated_list(COMMA,arg) { OtherInstr "CBNZ" }
+ | INST_CBZ separated_list(COMMA,arg) { OtherInstr "CBZ" }
+ | INST_CINC separated_list(COMMA,arg) { OtherInstr "CINC" }
  | INST_CLRPERM separated_list(COMMA,arg) { OtherInstr "CLRPERM" }
  | INST_CLRTAG separated_list(COMMA,arg) { OtherInstr "CLRTAG" }
+ | INST_CNEG separated_list(COMMA,arg) { OtherInstr "CNEG" }
+ | INST_CSEL separated_list(COMMA,arg) { OtherInstr "CSEL" }
  | INST_CSET separated_list(COMMA,arg) { OtherInstr "CSET" }
  | INST_CSINC separated_list(COMMA,arg) { OtherInstr "CSINC" }
+ | INST_EOR separated_list(COMMA,arg) { OtherInstr "EOR" }
+ | INST_FADD separated_list(COMMA,arg) { OtherInstr "FADD" }
+ | INST_FCVT separated_list(COMMA,arg) { OtherInstr "FCVT" }
+ | INST_FDIV separated_list(COMMA,arg) { OtherInstr "FDIV" }
+ | INST_FMOV separated_list(COMMA,arg) { OtherInstr "FMOV" }
+ | INST_FMUL separated_list(COMMA,arg) { OtherInstr "FMUL" }
+ | INST_FSUB separated_list(COMMA,arg) { OtherInstr "FSUB" }
+ | INST_GCVALUE separated_list(COMMA,arg) { OtherInstr "GCVALUE" }
  | INST_LDP separated_list(COMMA,arg) { OtherInstr "LDP" }
  | INST_LDR separated_list(COMMA,arg) { OtherInstr "LDR" }
  | INST_LDRB separated_list(COMMA,arg) { OtherInstr "LDRB" }
+ | INST_LDRH separated_list(COMMA,arg) { OtherInstr "LDRH" }
  | INST_LDRSW separated_list(COMMA,arg) { OtherInstr "LDRSW" }
  | INST_LDUR separated_list(COMMA,arg) { OtherInstr "LDUR" }
  | INST_LDURSW separated_list(COMMA,arg) { OtherInstr "LDURSW" }
  | LSL separated_list(COMMA,arg) { OtherInstr "LSL" }
+ | LSR separated_list(COMMA,arg) { OtherInstr "LSR" }
  | INST_MOV separated_list(COMMA,arg) { OtherInstr "MOV" }
- | INST_MUL separated_list(COMMA,arg) { OtherInstr "MUL" }
+ | INST_MOVI separated_list(COMMA,arg) { OtherInstr "MOVI" }
+ | INST_MOVK separated_list(COMMA,arg) { OtherInstr "MOVK" }
  | INST_MRS separated_list(COMMA,arg) { OtherInstr "MRS" }
+ | INST_MUL separated_list(COMMA,arg) { OtherInstr "MUL" }
+ | INST_MVN separated_list(COMMA,arg) { OtherInstr "MVN" }
+ | INST_ORN separated_list(COMMA,arg) { OtherInstr "ORN" }
+ | INST_ORR separated_list(COMMA,arg) { OtherInstr "ORR" }
  | INST_RET separated_list(COMMA,arg) { OtherInstr "RET" }
- | INST_SCBNDS separated_list(COMMA,arg) { CheriInstr "INST_SCBNDS" }
- | INST_SCBNDSE separated_list(COMMA,arg) { CheriInstr "INST_SCBNDSE" }
- | INST_SMADDL separated_list(COMMA,arg) { CheriInstr "INST_SMADDL" }
+ | INST_SBFIZ separated_list(COMMA,arg) { OtherInstr "SBFIZ" }
+ | INST_SCBNDS separated_list(COMMA,arg) { OtherInstr "SCBNDS" }
+ | INST_SCBNDSE separated_list(COMMA,arg) { OtherInstr "SCBNDSE" }
+ | INST_SCVTF separated_list(COMMA,arg) { OtherInstr "SCVTF" }
+ | INST_SDIV separated_list(COMMA,arg) { OtherInstr "SDIV" }
+ | INST_SEAL separated_list(COMMA,arg) { OtherInstr "SEAL" }
+ | INST_SMADDL separated_list(COMMA,arg) { OtherInstr "SMADDL" }
  | INST_STP separated_list(COMMA,arg) { OtherInstr "STP" }
  | INST_STR separated_list(COMMA,arg) { OtherInstr "STR" }
  | INST_STRB separated_list(COMMA,arg) { OtherInstr "STRB" }
  | INST_STRH separated_list(COMMA,arg) { OtherInstr "STRH" }
- | INST_SUB separated_list(COMMA,arg)    { OtherInstr "SUB" }
- | INST_SUBS separated_list(COMMA,arg) { OtherInstr "SUBS" }
  | INST_STUR separated_list(COMMA,arg) { OtherInstr "STUR" }
+ | INST_SUB separated_list(COMMA,arg) { OtherInstr "SUB" }
+ | INST_SUBS separated_list(COMMA,arg) { OtherInstr "SUBS" }
  | SXTW separated_list(COMMA,arg) { OtherInstr "SXTW" }
- | INST_TBZ separated_list(COMMA,arg) { OtherInstr "TBZ" }
  | INST_TBNZ separated_list(COMMA,arg) { OtherInstr "TBNZ" }
+ | INST_TBZ separated_list(COMMA,arg) { OtherInstr "TBZ" }
+ | INST_UBFX separated_list(COMMA,arg) { OtherInstr "UBFX" }
+ | INST_UDIV separated_list(COMMA,arg) { OtherInstr "UDIV" }
 
 statement:
   | l = IDENT COLON EOL+  { Label l }
