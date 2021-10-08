@@ -40,6 +40,7 @@ rule prog = parse
  | ".cfi_endproc" { dbg "CFI_ENDPROC"; DIR_CFI_ENDPROC }
  | ".cfi_offset" { dbg "CFI_OFFSET"; DIR_CFI_OFFSET }
  | ".cfi_startproc" { dbg "CFI_STARTPROC"; DIR_CFI_STARTPROC }
+ | ".cfi_sections" { dbg "CFI_SECTIONS"; DIR_CFI_SECTIONS }
  | ".chericap" { dbg "CHERICAP"; DIR_CHERICAP }
  | ".comm" { dbg "COMM"; DIR_COMM }
  | ".file" { dbg "FILE"; DIR_FILE }
@@ -56,28 +57,62 @@ rule prog = parse
  | ".word" { dbg "WORD"; DIR_WORD }
  | ".xword" { dbg "XWORD"; DIR_XWORD }
 
+(* shifting  *)
+ | "lsl" { dbg "LSL"; LSL }
+ | "lsr" { dbg "LSR"; LSR }
+ | "asr" { dbg "ASR"; ASR }
+ | "ror" { dbg "ROR"; ROR }
+(* exending *)
+ | "uxtb" { dbg "UXTB";  UXTB}
+ | "sxtb" { dbg "SXTB";  SXTB}
+ | "uxth" { dbg "UXTH";  UXTH}
+ | "sxth" { dbg "SXTH";  SXTH}
+ | "uxtw" { dbg "UXTW";  UXTW}
+ | "sxtw" { dbg "SXTW";  SXTW}
+
  | "add" { dbg "ADD"; INST_ADD }
+ | "and" { dbg "AND"; INST_AND }
+ | "ands" { dbg "ANDS"; INST_ANDS }
+ | "adds" { dbg "ADDS"; INST_ADDS }
+ | "adr" { dbg "ADR"; INST_ADR }
  | "adrp" { dbg "ADRP"; INST_ADRP }
  | "b" { dbg "B"; INST_B }
  | "bl" { dbg "BL"; INST_BL }
+ | "b.eq" { dbg "B.EQ"; INST_B_EQ }
  | "b.ne" { dbg "B.NE"; INST_B_NE }
+ | "b.gt" { dbg "B.GT"; INST_B_GT }
+ | "b.ge" { dbg "B.GE"; INST_B_GE }
+ | "b.lt" { dbg "B.LT"; INST_B_LT }
+ | "b.le" { dbg "B.LE"; INST_B_LE }
+ | "b.hi" { dbg "B.HI"; INST_B_HI }
+ | "cbz" { dbg "CBZ"; INST_CBZ }
+ | "cbnz" { dbg "CBNZ"; INST_CBNZ }
  | "clrperm" { dbg "CLRPERM"; INST_CLRPERM }
  | "clrtag" { dbg "CLRTAG"; INST_CLRTAG }
+ | "cset" { dbg "CSET"; INST_CSET }
+ | "csinc" { dbg "CSINC"; INST_CSINC }
  | "ldp" { dbg "LDP"; INST_LDP }
  | "ldr" { dbg "LDR"; INST_LDR }
+ | "ldrsw" { dbg "LDRSW"; INST_LDRSW }
  | "ldrb" { dbg "LDRB"; INST_LDRB }
  | "ldur" { dbg "LDUR"; INST_LDUR }
- | "lsl" { dbg "LSL"; INST_LSL }
+ | "ldursw" { dbg "LDURSW"; INST_LDURSW }
  | "mov" { dbg "MOV"; INST_MOV }
+ | "mul" { dbg "MUL"; INST_MUL }
+ | "mrs" { dbg "MRS"; INST_MRS }
  | "ret" { dbg "RET"; INST_RET }
  | "scbnds" { dbg "SCBNDS"; INST_SCBNDS }
  | "scbndse" { dbg "SCBNDSE"; INST_SCBNDSE }
+ | "smaddl" { dbg "SMADDL"; INST_SMADDL }
  | "stp" { dbg "STP"; INST_STP }
  | "str" { dbg "STR"; INST_STR }
  | "strb" { dbg "STRB"; INST_STRB }
  | "strh" { dbg "STRH"; INST_STRH }
  | "sub" { dbg "SUB"; INST_SUB }
  | "subs" { dbg "SUBS"; INST_SUBS }
+ | "stur" { dbg "STUR"; INST_STUR }
+ | "tbz" { dbg "tbz"; INST_TBZ }
+ | "tbnz" { dbg "tbnz"; INST_TBNZ }
 
  | ':' (identchar+ as s) ':' { dbg "RPREFIX"; RPREFIX s}
 
@@ -93,6 +128,7 @@ rule prog = parse
  | "0x" (hexchar+ as s) { dbg "HEX" ;  HEX s }
  | eof { dbg "EOF" ; EOF }
 
+ | '!'  { dbg "EXCL   "  ; EXCL     }
  | ','  { dbg "COMMA   " ; COMMA    }
  | '-'  { dbg "MINUS   " ; MINUS    }
  | "."  { dbg "DOT     " ; DOT      }

@@ -14,7 +14,8 @@ let process_file filename =
   let lineBuffer = Lexing.from_channel inBuffer in
   lineBuffer.Lexing.lex_curr_p <- { lineBuffer.Lexing.lex_curr_p with Lexing.pos_fname = filename };
   try
-    let _ = Parser.prog Lexer.prog lineBuffer in
+    let ast = Parser.prog Lexer.prog lineBuffer in
+    Printf.printf "%s\n" (Asmast.show_program ast) ;
     exitOK
   with
   | Parser.Error ->
