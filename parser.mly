@@ -6,6 +6,10 @@ open Asmast
 %token EXCL
 %token COMMA
 %token MINUS
+%token PLUS
+%token ASTERISK
+%token SLASH
+%token PERCENT
 %token DOT
 %token COLON
 %token LPAREN
@@ -147,9 +151,15 @@ i_int:
   | x=UINT { x }
   | MINUS x = UINT { -x }
 
+/* TODO: more operators https://www.keil.com/support/man/docs/armclang_ref/armclang_ref_zvb1510926525383.htm */
 expr:
   | IDENT { () }
-  | IDENT MINUS IDENT { () }
+  | LPAREN expr RPAREN { () }
+  | expr MINUS expr { () }
+  | expr PLUS expr { () }
+  | expr ASTERISK expr { () }
+  | expr SLASH expr { () }
+  | expr PERCENT expr { () }
   | i_int  { () }
   | i_uint { () }
 
@@ -224,7 +234,7 @@ directive:
     {
       OtherDir "ASCIZ"
     }
-  | DIR_BYTE i_uint
+  | DIR_BYTE separated_list(COMMA,expr)
     {
       OtherDir "BYTE"
     }
@@ -240,7 +250,7 @@ directive:
     {
       OtherDir "GLOBL"
     }
-  | DIR_HWORD expr
+  | DIR_HWORD separated_list(COMMA,expr)
     {
       OtherDir "HWORD"
     }
@@ -284,11 +294,11 @@ directive:
     {
       OtherDir "TYPE"
     }
-  | DIR_WORD expr
+  | DIR_WORD separated_list(COMMA,expr)
     {
       OtherDir "WORD"
     }
-  | DIR_XWORD expr
+  | DIR_XWORD separated_list(COMMA,expr)
     {
       OtherDir "XWORD"
     }

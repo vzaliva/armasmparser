@@ -156,16 +156,20 @@ rule prog = parse
  | "0x" (hexchar+ as s) { dbg "HEX" ;  HEX s }
  | eof { dbg "EOF" ; EOF }
 
- | '!'  { dbg "EXCL   "  ; EXCL     }
- | ','  { dbg "COMMA   " ; COMMA    }
- | '-'  { dbg "MINUS   " ; MINUS    }
- | "."  { dbg "DOT     " ; DOT      }
- | ":"  { dbg "COLON   " ; COLON    }
- | '('  { dbg "LPAREN  " ; LPAREN   }
- | ')'  { dbg "RPAREN  " ; RPAREN   }
+ | '!'  { dbg "EXCL"     ; EXCL     }
+ | ','  { dbg "COMMA"    ; COMMA    }
+ | '-'  { dbg "MINUS"    ; MINUS    }
+ | '+'  { dbg "PLUS"     ; PLUS     }
+ | '*'  { dbg "ASTERISK" ; ASTERISK }
+ | '/'  { dbg "SLASH"    ; SLASH    }
+ | '%'  { dbg "PERCENT"  ; PERCENT  }
+ | "."  { dbg "DOT"      ; DOT      }
+ | ":"  { dbg "COLON"    ; COLON    }
+ | '('  { dbg "LPAREN"   ; LPAREN   }
+ | ')'  { dbg "RPAREN"   ; RPAREN   }
  | '['  { dbg "LBRACKET" ; LBRACKET }
  | ']'  { dbg "RBRACKET" ; RBRACKET }
- | "#"  { dbg "HASH    " ; HASH     }
+ | "#"  { dbg "HASH"     ; HASH     }
  | _
     { raise (Error (Printf.sprintf "At offset %d: unexpected character.\n" (Lexing.lexeme_start lexbuf))) }
 
