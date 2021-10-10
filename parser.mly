@@ -300,7 +300,7 @@ directive:
     }
   | DIR_XWORD separated_list(COMMA,expr)
     {
-      OtherDir "XWORD"
+       OtherDir "XWORD"
     }
  
 
@@ -407,11 +407,17 @@ instruction:
  | INST_UDIV separated_list(COMMA,arg) { OtherInstr "UDIV" }
 
 statement:
-  | l = IDENT COLON EOL+  { Label l }
-  | i = instruction EOL+ { Instr i }
+  | l = IDENT COLON EOL+  
+    { 
+        Label ($loc(l), l)
+    }
+  | i = instruction EOL+ 
+    { 
+        Instr ($loc(i), i)
+    }
   | d = directive EOL+
     {
-      Directive d
+      Directive ($loc(d), d)
     }
 
 prog: v = list(statement) EOF

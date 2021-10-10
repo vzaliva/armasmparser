@@ -6,5 +6,5 @@
 (executable
  (name asm2c)
  (public_name asm2c)
- (preprocess (pps ppx_deriving.show))
+ (preprocess (staged_pps ppx_import ppx_deriving.show))
  )
